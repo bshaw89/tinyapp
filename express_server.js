@@ -29,12 +29,12 @@ app.get('/urls/new', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  console.log(req.body.longURL);
+  // console.log(req.body.longURL);
   // urlDatabase = req.body[longURL];
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
+  res.redirect(`/urls/${shortURL}`);
   console.log(urlDatabase);
-  res.send('Ok');
 });
 
 function generateRandomString() {
@@ -52,7 +52,7 @@ function generateRandomString() {
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-  console.log(templateVars);
+  // console.log(templateVars);
   res.render("urls_show", templateVars);
 });
 
