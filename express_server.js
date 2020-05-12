@@ -29,12 +29,30 @@ app.get('/urls/new', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  console.log(req.body);
+  console.log(req.body.longURL);
+  // urlDatabase = req.body[longURL];
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = req.body.longURL;
+  console.log(urlDatabase);
   res.send('Ok');
 });
 
+function generateRandomString() {
+  // define variable holding a ton of characters
+  // define a variable that defines a random number
+  // return the random number as an index of the characters
+  let randomString = '';
+  const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const charactersLength = characters.length;
+  for (let i =0; i <=6; i++) {
+    randomString += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return randomString;
+};
+
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  console.log(templateVars);
   res.render("urls_show", templateVars);
 });
 
@@ -46,15 +64,3 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-function generateRandomString() {
-  // define variable holding a ton of characters
-  // define a variable that defines a random number
-  // return the random number as an index of the characters
-  let randomString = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for (let i =0; i <=6; i++) {
-    randomString += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return randomString;
-};
