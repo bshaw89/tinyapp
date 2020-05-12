@@ -47,5 +47,14 @@ app.listen(PORT, () => {
 });
 
 function generateRandomString() {
-  
-}
+  // define variable holding a ton of characters
+  // define a variable that defines a random number
+  // return the random number as an index of the characters
+  let randomString = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i =0; i <=6; i++) {
+    randomString += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return randomString;
+};
