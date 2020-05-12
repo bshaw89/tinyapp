@@ -37,6 +37,11 @@ app.post('/urls', (req, res) => {
   console.log(urlDatabase);
 });
 
+app.post('/urls/:shortURL/delete', (req, res) => {
+  delete urlDatabase[req.params.shortURL];
+  res.redirect('/urls');
+})
+
 function generateRandomString() {
   // define variable holding a ton of characters
   // define a variable that defines a random number
