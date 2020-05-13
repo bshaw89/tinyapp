@@ -21,6 +21,11 @@ app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
 });
 
+app.get('/register', (req, res) => {
+  let templateVars = { username: req.cookies["username"] }
+  res.render('urls_register', templateVars);
+})
+
 app.post('/login', (req, res) => {
   res.cookie('username', req.body["username"]);
   res.redirect('/urls');
