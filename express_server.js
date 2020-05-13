@@ -13,6 +13,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+};
+
 app.get('/', (req, res) => {
   res.send('Hello!');
 });
@@ -24,6 +37,15 @@ app.get('/urls.json', (req, res) => {
 app.get('/register', (req, res) => {
   let templateVars = { username: req.cookies["username"] }
   res.render('urls_register', templateVars);
+})
+
+app.post('/register', (req, res) => {
+  const userID = generateRandomString();
+  users [userID] = { id: userID, email: req.body.email, password: req.body.password };
+  console.log(users);
+  console.log(req.body);
+  res.cookie('user_id', userID);
+  res.redirect('/urls');
 })
 
 app.post('/login', (req, res) => {
