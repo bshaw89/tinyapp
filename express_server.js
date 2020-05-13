@@ -28,6 +28,11 @@ app.get('/urls/new', (req, res) => {
   res.render('urls_new');
 });
 
+app.post('/login', (req, res) => {
+  res.cookie('username', req.params.body);
+  res.redirect('/urls');
+})
+
 app.post('/urls', (req, res) => {
   // console.log(req.body.longURL);
   // urlDatabase = req.body[longURL];
