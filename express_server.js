@@ -121,18 +121,23 @@ app.post('/logout', (req, res) => {
 })
 
 app.get('/urls', (req, res) => {
-  let filteredDatabase = {};
-  for (let url in urlDatabase) {
-    // FOR CUSTOM USER INDEX PAGE
-    if (req.cookies.user_id === urlDatabase[url].userID) {
-      filteredDatabase[url] = urlDatabase[url]
+  if (users[req.cookies.user_id]) {
+
+    let filteredDatabase = {};
+    for (let url in urlDatabase) {
+      // FOR CUSTOM USER INDEX PAGE
+      if (req.cookies.user_id === urlDatabase[url].userID) {
+        filteredDatabase[url] = urlDatabase[url]
+      }
     }
+    let templateVars = { 
+      user: users[req.cookies.user_id], 
+      urls: filteredDatabase
+    };
+    return res.render('urls_index', templateVars);
+  } else {
+    res.status(403).send('Please login or register.')
   }
-  let templateVars = { 
-    user: users[req.cookies.user_id], 
-    urls: filteredDatabase
-  };
-  res.render('urls_index', templateVars);
 });
 
 app.get('/urls/new', (req, res) => {
