@@ -47,29 +47,36 @@ app.post('/register', (req, res) => {
 
   for (let user in users) {
     if (users[user].email === req.body.email) {
-      console.log(user.email);
+      // console.log(user.email);
       res.status(400).end();
     }
   }
 
   users[userID] = { id: userID, email: req.body.email, password: req.body.password };
-  console.log(users);
-  res.cookie('user_id', userID);
+  // console.log(users);
+  // console.log(req.body.email);
+  res.cookie('user_id', req.body.email);
   res.redirect('/urls');
 })
 
 app.post('/login', (req, res) => {
+  // console.log(users);
   for (let user in users) {
+    // console.log(users[user].email);
     if (users[user].email === req.body.email) {
-      // console.log(user.email);
-      res.cookie('user_id', users[user].id);
-      break;
-    }
+      // console.log(users[user].email);
+      if (users[user].password === req.body.password) {
+        res.cookie('user_id', users[user].id);
+        // console.log(users);
+        res.redirect('/urls');
+      } else {
+        res.status(403).end();
+      }
+      }
   }
   // res.cookie('user_id', users[req.cookies.user_id]);
   // req.cookies.user_id;
-  res.redirect('/urls');
-})
+});
 
 app.get('/login', (req, res) => {
   const templateVars = { user: users[req.cookies.user_id] }
@@ -86,7 +93,7 @@ app.get('/urls', (req, res) => {
     user: users[req.cookies.user_id], 
     urls: urlDatabase 
   };
-  console.log(req.cookies)
+  // console.log(req.cookies)
   res.render('urls_index', templateVars);
 });
 
