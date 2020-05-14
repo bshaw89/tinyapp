@@ -120,19 +120,30 @@ app.post('/logout', (req, res) => {
   res.redirect('/login');
 })
 
+const urlsForUser = (id) => {
+  let filteredDatabase = {};
+  for (let url in urlDatabase) {
+    // FOR CUSTOM USER INDEX PAGE
+    if (id === urlDatabase[url].userID) {
+      filteredDatabase[url] = urlDatabase[url]
+    }
+  }
+  return filteredDatabase;
+}
+
 app.get('/urls', (req, res) => {
   if (users[req.cookies.user_id]) {
 
-    let filteredDatabase = {};
-    for (let url in urlDatabase) {
-      // FOR CUSTOM USER INDEX PAGE
-      if (req.cookies.user_id === urlDatabase[url].userID) {
-        filteredDatabase[url] = urlDatabase[url]
-      }
-    }
+    // let filteredDatabase = {};
+    // for (let url in urlDatabase) {
+    //   // FOR CUSTOM USER INDEX PAGE
+    //   if (req.cookies.user_id === urlDatabase[url].userID) {
+    //     filteredDatabase[url] = urlDatabase[url]
+    //   }
+    // }
     let templateVars = { 
       user: users[req.cookies.user_id], 
-      urls: filteredDatabase
+      urls: urlsForUser(req.cookies.user_id)
     };
     return res.render('urls_index', templateVars);
   } else {
