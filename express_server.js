@@ -55,27 +55,59 @@ app.post('/register', (req, res) => {
   users[userID] = { id: userID, email: req.body.email, password: req.body.password };
   // console.log(users);
   // console.log(req.body.email);
-  res.cookie('user_id', req.body.email);
+  res.cookie('user_id', userID);
   res.redirect('/urls');
 })
 
-app.post('/login', (req, res) => {
-  // console.log(users);
+
+
+const findUserByEmail = (email) => {
+  // loop through the users object
   for (let user in users) {
-    // console.log(users[user].email);
-    if (users[user].email === req.body.email) {
-      // console.log(users[user].email);
-      if (users[user].password === req.body.password) {
-        res.cookie('user_id', users[user].id);
-        // console.log(users);
-        res.redirect('/urls');
-      } else {
-        res.status(403).end();
-      }
-      }
+    // compare the emails, if they match return the user obj
+    if (users[user].email === email) {
+      return users[user];
+    }
   }
-  // res.cookie('user_id', users[req.cookies.user_id]);
-  // req.cookies.user_id;
+
+  // after the loop, return false
+  return false;
+};
+
+
+
+const authenticateUser = (email, password) => {
+  // retrieve the user with that email
+  const user = findUserByEmail(email);
+
+  // if we got a user back and the passwords match then return the userObj
+  if (user && password === user.password) {
+    // user is authenticated
+    return user;
+  } else {
+    // Otherwise return false
+    return false;
+  }
+};
+
+
+
+app.post('/login', (req, res) => {
+  // get data from form
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // Authenticate user
+  const user = authenticateUser(email, password);
+
+  // if authenticated, set cookie with its user id and redirect
+  if (user) {
+    res.cookie('user_id', user.id);
+    res.redirect('/urls');
+  } else {
+    // otherwise we send an error message
+    res.status(403).send('Wrong email or password.');
+  }
 });
 
 app.get('/login', (req, res) => {
