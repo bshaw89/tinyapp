@@ -179,9 +179,10 @@ app.post('/urls', (req, res) => {
 });
 
 app.post('/urls/:shortURL/delete', (req, res) => {
+  // console.log(urlDatabase[req.params.shortURL])
+  // console.log("urlDatabase[req.params.shortURL]", req.body);
   if (users[req.cookies.user_id]) {
-    delete urlDatabase[req.params.shortURL].longURL;
-    // console.log(urlDatabase[req.params.shortURL].longURL)
+    delete urlDatabase[req.params.shortURL];
     return res.redirect('/urls');
   } else {
     res.status(403).send('You must be logged in to delete a URL.')
