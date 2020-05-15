@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
+const bcrypt = require('bcrypt');
 
 app.set('view engine', 'ejs');
 
@@ -51,8 +52,10 @@ app.post('/register', (req, res) => {
       return res.status(400).end();
     }
   }
-
-  users[userID] = { id: userID, email: req.body.email, password: req.body.password };
+  const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  users[userID] = { id: userID, email: req.body.email, password: hashedPassword };
+  console.log(users[userID].password);
   // console.log(users);
   // console.log(req.body.email);
   res.cookie('user_id', userID); 
