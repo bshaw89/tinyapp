@@ -89,7 +89,7 @@ const authenticateUser = (email, password) => {
   const user = findUserByEmail(email);
 
   // if we got a user back and the passwords match then return the userObj
-  if (user && password === user.password) {
+  if (user && bcrypt.compareSync(password, user.password)) {
     // user is authenticated
     return user;
   } else {
