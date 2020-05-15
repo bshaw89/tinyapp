@@ -220,14 +220,12 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
-  // let templateVars = { user: users[req.cookies.user_id], id: req.params.id, longURL: urlDatabase[req.params.id].longURL }
-  // console.log(urlDatabase[req.params]);
-  // console.log(urlDatabase[req.params.id].longURL);
-  // console.log(req.body.longURL);
-  // console.log("urlDatabase[req.params.shortURL].longURL", req.params.shortURL)
-  // console.log("req.params.longURL , req.params.longURL")
+  if ((users[req.cookies.user_id])) {
   urlDatabase[req.params.id].longURL = req.body.longURL;
   res.redirect('/urls');
+  } else {
+    res.status(403).send('You must be logged in to edit a URL.')
+  }
 })
 
 app.get('/hello', (req, res) => {
