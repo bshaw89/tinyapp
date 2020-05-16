@@ -172,17 +172,22 @@ app.get('/urls/new', (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   if (users[req.session.user_id]) {
-    for (let url in urlDatabase) {
-      if (req.session.user_id === urlDatabase[url].userID) { // if current userID matches ID attached to URL
-        let templateVars = {
-          user: users[req.session.user_id],
-          shortURL: req.params.shortURL,
-          longURL: urlDatabase[req.params.shortURL].longURL
-        };
-        return res.render("urls_show", templateVars);
-      } else {
-        return res.status(403).send('You do not own that URL.');
-      }
+    console.log("urlDatabase:", urlDatabase)
+    console.log(req.params);
+    console.log("Cookie:", req.session.user_id);
+    
+    
+    let url = urlDatabase[req.params.shortURL];
+    
+    if (req.session.user_id === url.userID) {
+      let templateVars = {
+        user: users[req.session.user_id],
+        shortURL: req.params.shortURL,
+        longURL: url.longURL
+      };
+      return res.render("urls_show", templateVars);
+    } else {
+      return res.status(403).send('You do not own that URL.');
     }
   } else {
     res.status(403).send('You must be logged in to edit or delete a URL.');
