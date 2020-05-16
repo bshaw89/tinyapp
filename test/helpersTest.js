@@ -20,9 +20,7 @@ const testUsers = {
 describe('getUserByEmail', function() {
   it('should return a user with valid email', function() {
     const user = getUserByEmail("user@example.com", testUsers)
-    // console.log(expressServer.users);
     const expectedOutput = "userRandomID";
-    // Write your assert statement here
     assert(typeof user === "object", "uh oh, not an object in the database")
   });
 
