@@ -50,9 +50,17 @@ app.get('/register', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
+  // console.log(users[req.body.email]);
+    for (let user in users) {
+      // console.log(users[user].email)
+      if (users[user].email === req.body.email) {
+        res.status(403).send('Email address already registered. Please login.');
+      }
+    }
+  
   const userID = generateRandomString();
   if (req.body.email === "" || req.body.password === "") {
-    return res.status(400).end();
+    return res.status(400).send("Please enter email and password.");
   }
 
   for (let user in users) {
@@ -69,6 +77,7 @@ app.post('/register', (req, res) => {
   // console.log(req.body.email);
   req.session.user_id = userID; 
   res.redirect('/urls'); // return
+
 })
 
 
@@ -223,25 +232,29 @@ function generateRandomString() {
 };
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL].longURL;
-  res.redirect(longURL);
+    if (urlDatabase[req.params.shortURL]) {
+      const longURL = urlDatabase[req.params.shortURL].longURL;
+      return res.redirect(longURL);
+    } else {
+      res.status(403).send('Oops! URL does not exist.')
+    }
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   if (users[req.session.user_id]) {
+
     for (let url in urlDatabase) {
       // FOR CUSTOM USER INDEX PAGE
       if (req.session.user_id === urlDatabase[url].userID) {
+        console.log(urlDatabase[url].userID.id)
         let templateVars = { user: users[req.session.user_id], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL };
         return res.render("urls_show", templateVars);
       } else {
         return res.status(403).send('You do not own that URL.')}
-    }
-  // console.log("urlDatabase =", urlDatabase)
-  // console.log("urlDatabase[req.params.shortURL] =", urlDatabase[req.params.shortURL])
-  } else {
-    res.status(403).send('You must be logged in to edit or delete a URL.')
-  }
+    } 
+} else {
+  res.status(403).send('You must be logged in to edit or delete a URL.')
+}
 });
 
 app.post("/urls/:id", (req, res) => {
