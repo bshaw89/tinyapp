@@ -228,11 +228,20 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { user: users[req.session.user_id], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL };
+  if (users[req.session.user_id]) {
+    for (let url in urlDatabase) {
+      // FOR CUSTOM USER INDEX PAGE
+      if (req.session.user_id === urlDatabase[url].userID) {
+        let templateVars = { user: users[req.session.user_id], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL };
+        return res.render("urls_show", templateVars);
+      } else {
+        return res.status(403).send('You do not own that URL.')}
+    }
   // console.log("urlDatabase =", urlDatabase)
   // console.log("urlDatabase[req.params.shortURL] =", urlDatabase[req.params.shortURL])
-  
-  res.render("urls_show", templateVars);
+  } else {
+    res.status(403).send('You must be logged in to edit or delete a URL.')
+  }
 });
 
 app.post("/urls/:id", (req, res) => {
