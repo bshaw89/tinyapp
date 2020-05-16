@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 // const cookieParser = require('cookie-parser');
 // app.use(cookieParser());
+const helpers = require('./helpers.js');
 const cookieSession = require('cookie-session');
 app.use(cookieSession({
   name: 'session',
@@ -75,18 +76,22 @@ app.post('/register', (req, res) => {
 // FIND USER BY EMAIL FUNCTION
 // ****************************
 
-const findUserByEmail = (email) => {
-  // loop through the users object
-  for (let user in users) {
-    // compare the emails, if they match return the user obj
-    if (users[user].email === email) {
-      return users[user];
-    }
-  }
+// refactor to use user database
+// add database parameter
+// chance for (let USER in USERS) to for (let user in DATABASE)
 
-  // after the loop, return false
-  return false;
-};
+// const findUserByEmail = (email, users) => {
+//   // loop through the users object
+//   for (let user in users) {
+//     // compare the emails, if they match return the user obj
+//     if (users[user].email === email) {
+//       return users[user];
+//     }
+//   }
+
+//   // after the loop, return false
+//   return false;
+// };
 
 // ****************************
 // AUTHENTICATE USER FUNCTION
@@ -94,7 +99,7 @@ const findUserByEmail = (email) => {
 
 const authenticateUser = (email, password) => {
   // retrieve the user with that email
-  const user = findUserByEmail(email);
+  const user = helpers.getUserByEmail(email, users);
 
   // if we got a user back and the passwords match then return the userObj
   if (user && bcrypt.compareSync(password, user.password)) {
