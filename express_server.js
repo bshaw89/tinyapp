@@ -19,7 +19,7 @@ const bcrypt = require('bcrypt');
 app.set('view engine', 'ejs');
 
 const urlDatabase = {
-  // "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "" },
+  // "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "" }
   // "9sm5xK": { longURL: "http://www.google.com", userID: "" }
 };
 
@@ -137,7 +137,7 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('user_id');
+  req.session = null;
   res.redirect('/login');
 })
 
